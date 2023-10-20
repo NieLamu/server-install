@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  gost-warp:
+    image: gogost/gost
+    container_name: gost-warp
+    network_mode: host
+    restart: always
+    volumes:
+      - ${CERT_DIR}:${CERT_DIR}:ro
+    command: >
+      -L "mwss://${USERNAME}:${PASSWORD}@:${GOST_WARP_PORT}?path=${WS_PATH}&certFile=${CERT_FILE}&keyFile=${KEY_FILE}"
+      -F "socks://localhost:40000"
+
+  ss-libev:
+    image: teddysun/shadowsocks-libev
+    container_name: ss-libev
+    network_mode: host
+    restart: always
+    volumes:
+      - ${CERT_DIR}:${CERT_DIR}:ro
+      - ${SS_LIBEV_CONFIG_PATH}:${SS_LIBEV_CONFIG_PATH}:ro
+
+  trojan-go:
+    image: teddysun/trojan-go
+    container_name: trojan-go
+    network_mode: host
+    restart: always
+    volumes:
+      - ${CERT_DIR}:${CERT_DIR}:ro
+      - ${TROJAN_GO_CONFIG_PATH}:${TROJAN_GO_CONFIG_PATH}:ro
