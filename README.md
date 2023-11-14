@@ -1,1 +1,1 @@
-# ss-install
+# server-install
